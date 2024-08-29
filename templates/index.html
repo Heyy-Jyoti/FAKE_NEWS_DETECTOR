@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fake News Detection</title>
+    <style>
+        body {
+            background-image: url('bg.jpg'); /* Set the background image */
+            background-size: cover; /* Ensure the image covers the entire area */
+            background-repeat: no-repeat; /* Prevent the image from repeating */
+            background-position: center; /* Center the background image */
+        }
+
+        h1 {
+            text-shadow: 1px 1px #706b51;
+        }
+
+        .news-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            box-shadow: -1px 3px 10px -3px grey;
+            padding: 20px 80px;
+            margin: 50px 50px;
+            background: #e8e8e8;
+            background-image: url('news.jpg');
+            background-size: cover; /* Ensures the background image covers the entire box */
+            background-position: center; /* Centers the background image */
+        }
+
+        textarea {
+            height: 200px;
+            width: 400px;
+            box-shadow: black;
+            font-size: 18px;
+            padding: 10px;
+        }
+
+        button {
+            font-size: 20px;
+            background-color: #706b51;
+            color: white;
+            border: #706b51;
+            padding: 10px 14px;
+            margin: 10px;
+            box-shadow: 0px 3px 8px -1px black;
+            cursor: pointer; /* Makes the button look clickable */
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            flex-direction: row;
+            margin: 50px 20px;
+        }
+
+        img {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 300px; /* Adjust the width as needed */
+            margin: 10px;
+        }
+
+        @media (max-width: 1000px) {
+            .container {
+                margin-top: 30px;
+                flex-direction: column;
+            }
+
+            img {
+                width: 120px; /* Decrease the size for smaller screens */
+                margin: 10px;
+            }
+        }
+
+        @media (min-width: 1000px) and (max-width: 1200px) {
+            img {
+                width: 150px; /* Adjust size for medium screens */
+                margin: 10px;
+            }
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="news-box">
+        <h1>Fake News Detector</h1>
+        <!-- Form to submit user input -->
+        <form id="newsForm">
+            <textarea name="news" id="newsInput" placeholder="Enter Your News here"></textarea>
+            <button type="submit">Predict</button>
+        </form>
+
+        <!-- Display the predictions if they exist -->
+        <div id="predictionResults" style="display:none;">
+            <h2>Prediction Results:</h2>
+            <p><strong>Logistic Regression:</strong> <span id="pred_lr"></span></p>
+            <p><strong>Decision Tree:</strong> <span id="pred_dt"></span></p>
+            <p><strong>Gradient Boosting:</strong> <span id="pred_gb"></span></p>
+            <p><strong>Random Forest:</strong> <span id="pred_rf"></span></p>
+            <p><strong>SVM:</strong> <span id="pred_svm"></span></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#newsForm').on('submit', function(e) {
+            e.preventDefault();
+            var newsText = $('#newsInput').val();
+            
+            // AJAX request to send data to backend
+            $.ajax({
+                type: 'POST',
+                url: '/', // Ensure this is the correct route on your Flask app
+                data: JSON.stringify({ news: newsText }),
+                contentType: 'application/json',
+                success: function(response) {
+                    // Assuming the backend returns a JSON response with predictions
+                    $('#pred_lr').text(response.pred_lr);
+                    $('#pred_dt').text(response.pred_dt);
+                    $('#pred_gb').text(response.pred_gb);
+                    $('#pred_rf').text(response.pred_rf);
+                    $('#pred_svm').text(response.pred_svm);
+                    $('#predictionResults').fadeIn();
+                },
+                error: function() {
+                    alert('Error fetching predictions. Please try again.');
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
