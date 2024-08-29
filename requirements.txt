@@ -7,12 +7,12 @@ itsdangerous==2.2.0
 Jinja2==3.1.4
 joblib==1.4.2
 MarkupSafe==2.1.5
-numpy==2.1.0
+numpy==1.21.0
 packaging==24.1
 pandas==2.2.2
 python-dateutil==2.9.0.post0
 pytz==2024.1
-pywin32==306
+pywin32==305
 scikit-learn==1.5.1
 scipy==1.14.1
 setuptools==74.0.0
