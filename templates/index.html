@@ -5,7 +5,7 @@
     <title>Fake News Detection</title>
     <style>
         body {
-            background-image: url('bg.jpg'); /* Set the background image */
+            background-image: url('static/bg.jpg'); /* Set the background image */
             background-size: cover; /* Ensure the image covers the entire area */
             background-repeat: no-repeat; /* Prevent the image from repeating */
             background-position: center; /* Center the background image */
@@ -24,7 +24,7 @@
             padding: 20px 80px;
             margin: 50px 50px;
             background: #e8e8e8;
-            background-image: url('news.jpg');
+            background-image: url('static/news.jpg');
             background-size: cover; /* Ensures the background image covers the entire box */
             background-position: center; /* Centers the background image */
         }
@@ -120,12 +120,12 @@
                 data: JSON.stringify({ news: newsText }),
                 contentType: 'application/json',
                 success: function(response) {
-                    // Assuming the backend returns a JSON response with predictions
-                    $('#pred_lr').text(response.pred_lr);
-                    $('#pred_dt').text(response.pred_dt);
-                    $('#pred_gb').text(response.pred_gb);
-                    $('#pred_rf').text(response.pred_rf);
-                    $('#pred_svm').text(response.pred_svm);
+                    // Display predictions using correct keys from the response
+                    $('#pred_lr').text(response.LR);
+                    $('#pred_dt').text(response.DT);
+                    $('#pred_gb').text(response.GB);
+                    $('#pred_rf').text(response.RF);
+                    $('#pred_svm').text(response.SVM);
                     $('#predictionResults').fadeIn();
                 },
                 error: function() {

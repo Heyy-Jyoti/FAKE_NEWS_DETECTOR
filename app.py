@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, jsonify
 import pandas as pd
 import numpy as np
 import re
@@ -30,27 +30,34 @@ def wordopt(text):
 def predict_news(news):
     news = wordopt(news)
     vect = vectorization.transform([news])
-    pred_LR = LR.predict(vect)[0]
-    pred_DT = DT.predict(vect)[0]
-    pred_GB = GB.predict(vect)[0]
-    pred_RF = RF.predict(vect)[0]
-    pred_SVM = svm_model.predict(vect)[0]
-    return {"LR": pred_LR, "DT": pred_DT, "GB": pred_GB, "RF": pred_RF, "SVM": pred_SVM}
-
+    pred_LR = int(LR.predict(vect)[0])
+    pred_DT = int(DT.predict(vect)[0])
+    pred_GB = int(GB.predict(vect)[0])
+    pred_RF = int(RF.predict(vect)[0])
+    pred_SVM = int(svm_model.predict(vect)[0])
+    return {
+        "LR": pred_LR,
+        "DT": pred_DT,
+        "GB": pred_GB,
+        "RF": pred_RF,
+        "SVM": pred_SVM
+    }
 @app.route('/', methods=['GET', 'POST'])
 def predict():
     if request.method == 'POST':
-        news = request.form['news']
-        predictions = predict_news(news)
-        return render_template('index.html', 
-                               news=news, 
-                               pred_lr=predictions['LR'],
-                               pred_dt=predictions['DT'],
-                               pred_gb=predictions['GB'],
-                               pred_rf=predictions['RF'],
-                               pred_svm=predictions['SVM'])
+        try:
+            data = request.get_json()
+            if 'news' not in data:
+                return jsonify({"error": "Error: 'news' field is missing in request"}), 400
+            news = data['news']
+            predictions = predict_news(news)
+            return jsonify(predictions)
+        except Exception as e:
+            print(f"Error: {e}")
+            return jsonify({"error": "Internal Server Error"}), 500
     else:
         return render_template('index.html')
+
 
 if __name__ == "__main__":
     print("Starting the Flask application...")
